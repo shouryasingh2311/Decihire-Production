@@ -26,13 +26,15 @@ GENERATED_TESTS = {}
 
 def load_assessment_data():
     """Loads all assessment data from the external questions.json file."""
-    if not os.path.exists('questions.json'):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, 'questions.json')
+    if not os.path.exists(file_path):
         print("\n[ERROR] 'questions.json' not found. Returning empty structure.")
         return {"PASS_THRESHOLD": 75, "JOB_PROFILES": {}}
 
     try:
         # CRITICAL FIX: Add encoding='utf-8' to handle special characters
-        with open('questions.json', 'r', encoding='utf-8') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
         print(
             f"\n[INFO] Successfully loaded {len(data.get('JOB_PROFILES', {}))} job profiles.")
@@ -48,8 +50,9 @@ def load_assessment_data():
 
 
 ASSESSMENT_DATA = load_assessment_data()
-app = Flask(__name__)
-app.secret_key = str(uuid.uuid4())
+base_dir = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder=os.path.join(base_dir, 'templates'), static_folder=os.path.join(base_dir, 'static'))
+app.secret_key = os.environ.get('SECRET_KEY', 'decihier-super-secret-key-12345') # Fixed key for serverless persistence
 
 # --- JOB PROFILE ICONS (inline SVG for each role) ---
 JOB_ICONS = {
