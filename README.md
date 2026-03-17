@@ -31,7 +31,7 @@ Follow these instructions to run the project on your local machine.
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/shouryasingh2311/Decihire-Production.git
 cd deci_hier
 ```
 
