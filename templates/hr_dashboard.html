@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HR Dashboard — All Results | DeciHier</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{crimson:'#DC143C'}}}};</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    :root{--crimson:#DC143C;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:#060606;color:#fff;font-family:'Space Grotesk',sans-serif;min-height:100vh;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:256px;animation:grain .3s steps(1) infinite;}
+    @keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-3%)}20%{transform:translate(3%,2%)}30%{transform:translate(-1%,4%)}40%{transform:translate(2%,-1%)}50%{transform:translate(-3%,3%)}60%{transform:translate(1%,-2%)}70%{transform:translate(-2%,1%)}80%{transform:translate(3%,-3%)}90%{transform:translate(-1%,2%)}100%{transform:translate(2%,0)}}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:#000;} ::-webkit-scrollbar-thumb{background:var(--crimson);}
+    .page{max-width:1100px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+    .eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.4em;color:var(--crimson);text-transform:uppercase;margin-bottom:.5rem;}
+    .big-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);line-height:.95;margin-bottom:2rem;}
+    .db-table{width:100%;border-collapse:collapse;}
+    .db-table thead tr{border-bottom:1px solid rgba(220,20,60,.2);}
+    .db-table th{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--crimson);text-transform:uppercase;padding:.6rem .85rem;text-align:left;font-weight:400;}
+    .db-table td{font-size:.8rem;color:rgba(255,255,255,.55);padding:.85rem .85rem;border-bottom:1px solid rgba(255,255,255,.04);}
+    .db-table tr:hover td{background:rgba(220,20,60,.03);}
+    .link-crim{color:var(--crimson);text-decoration:none;font-family:'Space Mono',monospace;font-size:.75rem;letter-spacing:.1em;transition:opacity .2s;}
+    .link-crim:hover{opacity:.7;}
+    .badge{font-family:'Space Mono',monospace;font-size:.65rem;padding:.15rem .5rem;letter-spacing:.1em;display:inline-block;}
+    .badge-pass{color:#00D4AA;border:1px solid rgba(0,212,170,.4);}
+    .badge-fail{color:var(--crimson);border:1px solid rgba(220,20,60,.4);}
+    .empty-state{text-align:center;padding:4rem 1rem;color:rgba(255,255,255,.15);font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em;}
+    .link-muted{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s;}
+    .link-muted:hover{color:var(--crimson);}
+    .nav-bar{display:flex;gap:2rem;margin-bottom:2.5rem;border-bottom:1px solid rgba(220,20,60,.1);padding-bottom:1rem;}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div style="opacity:0;transform:translateY(30px);" id="header-block">
+      <p class="eyebrow">// HR OPERATOR DASHBOARD</p>
+      <h1 class="big-title">ASSESSMENT<br><span style="color:var(--crimson);">RESULTS LOG</span></h1>
+      <div class="nav-bar">
+        <a href="{{ url_for('hr_create_test') }}" class="link-muted">⊕ Create New Test</a>
+        <a href="/" class="link-muted">← Candidate Portal</a>
+      </div>
+    </div>
+
+    <div style="opacity:0;transform:translateY(25px);" id="table-block">
+      {% if results %}
+      <table class="db-table">
+        <thead>
+          <tr>
+            <th>Report ID</th>
+            <th>Candidate</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th>Submitted (UTC)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in results %}
+          <tr>
+            <td><a href="{{ url_for('show_assessment_result', result_id=r.id) }}" class="link-crim">{{ r.id }}</a></td>
+            <td style="color:rgba(255,255,255,.8);font-weight:500;">{{ r.username }}</td>
+            <td style="font-family:'Space Mono',monospace;color:{% if r.score >= 75 %}#00D4AA{% else %}#DC143C{% endif %};">{{ '%.1f'|format(r.score) }}%</td>
+            <td>
+              {% if r.score >= 75 %}
+              <span class="badge badge-pass">PASS</span>
+              {% else %}
+              <span class="badge badge-fail">FAIL</span>
+              {% endif %}
+            </td>
+            <td style="color:rgba(255,255,255,.45);font-size:.75rem;">{{ r.role }}</td>
+            <td style="font-family:'Space Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.25);">{{ r.submitted_at[:19] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="empty-state">NO RESULTS YET.<br><span style="font-size:1rem;font-family:'Space Mono',monospace;color:rgba(255,255,255,.1);letter-spacing:.2em;">Awaiting candidates.</span></div>
+      {% endif %}
+    </div>
+  </div>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.to('#header-block', { opacity:1, y:0, duration:.8, ease:'power3.out', delay:.2 });
+    gsap.to('#table-block',  { opacity:1, y:0, duration:.7, ease:'power3.out', delay:.45 });
+  </script>
+</body>
+</html>

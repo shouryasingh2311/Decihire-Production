@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Test Key Generated | DeciHier</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{crimson:'#DC143C'}}}};</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    :root{--crimson:#DC143C;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{min-height:100%;background:#000;color:#fff;font-family:'Space Grotesk',sans-serif;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:256px;animation:grain .3s steps(1) infinite;}
+    @keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-3%)}20%{transform:translate(3%,2%)}30%{transform:translate(-1%,4%)}40%{transform:translate(2%,-1%)}50%{transform:translate(-3%,3%)}60%{transform:translate(1%,-2%)}70%{transform:translate(-2%,1%)}80%{transform:translate(3%,-3%)}90%{transform:translate(-1%,2%)}100%{transform:translate(2%,0)}}
+    .page{max-width:680px;margin:0 auto;padding:4rem 1.5rem;}
+    .eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.4em;color:var(--crimson);text-transform:uppercase;margin-bottom:.5rem;}
+    .big-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,7vw,4rem);line-height:.95;margin-bottom:1.5rem;}
+    .key-display{background:rgba(220,20,60,.07);border:1px solid rgba(220,20,60,.3);border-left:3px solid var(--crimson);padding:1.5rem 2rem;margin:1.5rem 0;text-align:center;}
+    .key-value{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:.25em;color:var(--crimson);}
+    .key-label{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.3em;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:.5rem;}
+    .card{background:rgba(8,0,0,.8);border:1px solid rgba(220,20,60,.12);border-left:2px solid rgba(220,20,60,.3);padding:1.25rem;margin-bottom:1.5rem;}
+    .q-item{font-size:.8rem;color:rgba(255,255,255,.45);padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);line-height:1.5;}
+    .q-item:last-child{border-bottom:none;}
+    .q-num{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--crimson);margin-right:.5rem;}
+    .btn-row{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap;}
+    .btn-crim{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.15em;padding:.6rem 1.5rem;background:var(--crimson);color:#fff;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;box-shadow:0 0 15px rgba(220,20,60,.3);}
+    .btn-crim:hover{background:#FF2D55;box-shadow:0 0 25px rgba(220,20,60,.5);}
+    .btn-ghost{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.15em;padding:.6rem 1.25rem;background:transparent;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.1);cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+    .btn-ghost:hover{border-color:rgba(220,20,60,.4);color:var(--crimson);}
+  </style>
+</head>
+<body>
+  <div class="page" style="opacity:0;transform:translateY(30px);" id="main">
+    <p class="eyebrow">// KEY ISSUED SUCCESSFULLY</p>
+    <h1 class="big-title">TEST KEY<br><span style="color:var(--crimson);">GENERATED</span></h1>
+
+    <p style="font-size:.9rem;color:rgba(255,255,255,.5);margin-bottom:.5rem;">Simulation module: <span style="color:#fff;font-weight:600;">{{ role }}</span></p>
+    <p style="font-family:'Space Mono',monospace;font-size:.75rem;color:rgba(255,255,255,.3);">Share the key below with your candidate. It expires after a single use session.</p>
+
+    <div class="key-display">
+      <div class="key-label">Candidate Test Key</div>
+      <div class="key-value" id="test-key">{{ test_key }}</div>
+      <p style="font-family:'Space Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.25);margin-top:.5rem;letter-spacing:.1em;">Click to copy</p>
+    </div>
+
+    <div class="btn-row">
+      <a href="{{ url_for('hr_dashboard') }}" class="btn-crim">VIEW DASHBOARD</a>
+      <a href="{{ url_for('hr_create_test') }}" class="btn-ghost">GENERATE ANOTHER</a>
+    </div>
+
+    <!-- Question preview -->
+    <div style="margin-top:2.5rem;">
+      <p style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.3em;color:rgba(255,255,255,.2);text-transform:uppercase;margin-bottom:.75rem;">// Internal: Scenario Preview</p>
+      <div class="card">
+        {% for q in questions %}
+        <div class="q-item">
+          <span class="q-num">{{ '%02d' % loop.index }}.</span>{{ q.prompt[:120] }}…
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    gsap.to('#main', { opacity:1, y:0, duration:.8, ease:'power3.out', delay:.2 });
+
+    // Copy to clipboard
+    document.getElementById('test-key').addEventListener('click', function() {
+      navigator.clipboard.writeText(this.textContent.trim()).then(() => {
+        const orig = this.textContent;
+        this.textContent = 'COPIED!';
+        this.style.color = '#00D4AA';
+        setTimeout(() => { this.textContent = orig; this.style.color = 'var(--crimson)'; }, 1500);
+      });
+    });
+    document.getElementById('test-key').style.cursor = 'pointer';
+  </script>
+</body>
+</html>

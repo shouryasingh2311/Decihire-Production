@@ -1,0 +1,3453 @@
+{
+    "PASS_THRESHOLD": 75,
+    "JOB_PROFILES": {
+        "DevOps Engineer": {
+            "description": "Assesses automation, reliability, incident response, and optimization decisions under production pressure.",
+            "skills_required": [
+                "Technical Acumen",
+                "Strategic Leadership",
+                "Ethical Responsibility",
+                "Business Profitability"
+            ],
+            "questions": [
+                {
+                    "id": 1,
+                    "prompt": "The new deployment is failing in production with 500 errors during peak traffic. What is the best course of action to restore service while minimizing impact, risk, and resource waste?",
+                    "options": [
+                        {
+                            "text": "Immediately trigger a rollback using the blue/green deployment mechanism to switch traffic back to the last stable version.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Scale up additional instances to handle incoming traffic while debugging the new deployment in parallel.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 5,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Stop the deployment, manually investigate logs and fix the configuration before attempting another deployment.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 3,
+                                "ER": 6,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Terminate all problematic instances and redeploy the service from scratch on a new environment.",
+                            "score": {
+                                "TA": 3,
+                                "SL": 2,
+                                "ER": 4,
+                                "BP": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "prompt": "A security audit flags a public S3 bucket storing sensitive data and overprivileged IAM keys. What is the most effective immediate action to reduce risk while maintaining productivity?",
+                    "options": [
+                        {
+                            "text": "Immediately revoke public access on the S3 bucket and apply least-privilege IAM policies for all users.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Rotate all IAM keys for developers and audit usage logs before taking further action.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Set up temporary encryption for the S3 bucket using server-side encryption while investigating further.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Take a snapshot of the current S3 bucket and restrict access to a new bucket while leaving the old bucket untouched.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 6,
+                                "BP": 3
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "prompt": "During a critical release, an automated test fails in staging and blocks production deployment. The client demands an urgent hotfix. How do you handle this to maintain reliability and client trust?",
+                    "options": [
+                        {
+                            "text": "Halt the production deployment, fix the failing test in staging, and rerun the full pipeline before deploying.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Manually override the failing test and proceed with production deployment for the client.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 3,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Deploy only unaffected microservices to production while keeping the problematic service in staging.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Roll back the last production deployment and revert to the previous stable version.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "prompt": "Your AWS EC2 instances are underutilized, but auto-scaling triggers only on high CPU. Finance requests cost optimization without affecting performance. How do you proceed?",
+                    "options": [
+                        {
+                            "text": "Adjust auto-scaling policies to include CPU, memory, and latency metrics for dynamic scaling.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 7,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Switch underutilized EC2 instances to smaller types immediately.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Migrate workloads to serverless (e.g., AWS Lambda) for cost efficiency.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Shut down all underutilized instances during off-peak hours using scripts.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "prompt": "During peak sales hours, your PostgreSQL database shows high CPU/I/O and slow checkouts. You use read replicas. How should you act to restore performance and ensure stability?",
+                    "options": [
+                        {
+                            "text": "Promote a read replica to handle additional write load and rebalance traffic.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Increase instance size of the primary database temporarily to handle load.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Optimize slow queries and add indexes while keeping current configuration.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Enable caching at the application level to reduce DB reads.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "prompt": "In your Kubernetes cluster, the payment pod is crashing due to memory leaks, causing failed transactions. What’s the best approach to mitigate the incident quickly while ensuring long-term stability?",
+                    "options": [
+                        {
+                            "text": "Restart the crashing pod immediately and investigate the leak in the next cycle.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 6,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Scale up replicas of the service to distribute load while fixing the leak in code.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Drain traffic from the affected service and deploy a hotfix version immediately.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 6,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Roll back the service to the previous stable version and debug offline.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "prompt": "Developers struggle to trace issues due to scattered logs. The team wants a centralized logging solution that balances cost, latency, and speed. Which approach do you choose?",
+                    "options": [
+                        {
+                            "text": "Deploy a centralized ELK stack to aggregate all logs in near real-time.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Push logs to CloudWatch and use CloudWatch Insights for analysis.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Store logs locally and collect them with periodic scripts.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Use a third-party SaaS platform like Datadog for centralized log ingestion.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 8,
+                    "prompt": "A vulnerability scan shows your AWS database subnet is accessible from the internet due to permissive security groups. What’s the most effective way to secure it while minimizing disruption?",
+                    "options": [
+                        {
+                            "text": "Immediately restrict access to only application server IPs and monitor unauthorized attempts.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 8,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Move the database to a private subnet and update routing tables.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 9,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Enable database-level encryption and authentication without changing network settings.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 8,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Snapshot and migrate data to a new instance in a secure subnet.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 6,
+                                "ER": 9,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 9,
+                    "prompt": "A major region outage disrupts your multi-region production workloads. Your backup plan uses daily snapshots but lacks RTO/RPO. How should you improve disaster recovery for business continuity?",
+                    "options": [
+                        {
+                            "text": "Implement cross-region replication and automated failover for critical databases.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Increase snapshot frequency from daily to hourly for critical systems.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Use IaC templates to quickly provision infrastructure in another region.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Maintain manual backup servers in another region for failover.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 10,
+                    "prompt": "The recommendation service pods show high CPU/memory usage causing 503 errors. HPA is slow. What’s the best way to stabilize the service while keeping resources efficient?",
+                    "options": [
+                        {
+                            "text": "Temporarily increase replica count manually and tune HPA metrics for faster response.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Optimize microservice code to reduce resource usage before scaling.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Add more nodes to the cluster to increase capacity for autoscaling.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Implement a queue system like Kafka to buffer requests and smooth load.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Cloud Architect": {
+            "description": "Assesses strategic decisions on cloud adoption, cost optimization, disaster recovery, and network design.",
+            "skills_required": [
+                "Technical Acumen",
+                "Strategic Leadership",
+                "Ethical Responsibility",
+                "Business Profitability"
+            ],
+            "questions": [
+                {
+                    "id": 11,
+                    "prompt": "Designing a global e-commerce platform on AWS. Traffic is increasing worldwide, and latency is a concern for users in Asia/Europe from a single North America region. Which strategy is the most effective?",
+                    "options": [
+                        {
+                            "text": "Deploy application instances in multiple AWS regions and use a global load balancer to route users to the nearest region.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use a CDN (Content Delivery Network) to cache static assets globally while keeping dynamic services in North America.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Enable AWS Global Accelerator to optimize routing for all traffic to the North American region.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Migrate to a multi-cloud setup with regions in AWS and Azure to distribute load globally.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 12,
+                    "prompt": "Cloud spend increased 40% over the last quarter due to underutilized EC2 instances and high storage costs. Which approach best balances cost savings and reliability?",
+                    "options": [
+                        {
+                            "text": "Right-size all underutilized EC2 instances, switch to reserved or spot instances where appropriate.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Move infrequently accessed data to cheaper storage tiers like S3 Glacier or infrequent access.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Enable auto-scaling on compute resources to only run instances when traffic is high.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 6,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Shut down underutilized resources manually during off-peak hours.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 13,
+                    "prompt": "Designing a multi-cloud architecture for a healthcare SaaS platform storing sensitive patient data. Compliance demands HIPAA/GDPR. Some services are not encrypted, and IAM is permissive. What is the most effective way to secure the environment?",
+                    "options": [
+                        {
+                            "text": "Encrypt all data at rest and in transit, and apply least-privilege IAM policies for all users and services.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Use a third-party security monitoring tool to detect violations while planning full remediation.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Isolate legacy services in a separate secure subnet until they can be refactored.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Implement multi-factor authentication for all access points immediately.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 9,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 14,
+                    "prompt": "Your platform handles critical financial transactions in a single region. Recovery could take 12+ hours, but management requires RTO under 1 hour and RPO under 15 minutes. Which strategy best achieves these goals?",
+                    "options": [
+                        {
+                            "text": "Implement cross-region replication for databases, multi-region deployment for applications, and automated failover.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Increase backup frequency to every 15 minutes and restore manually during failure.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 7,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Use Infrastructure-as-Code templates to spin up the environment in a secondary region during an outage.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Maintain warm standby servers in another region and manually redirect traffic during outages.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 15,
+                    "prompt": "Migrating on-prem legacy applications to the cloud (monoliths and microservices). Team wants to minimize downtime, ensure compatibility, and reduce costs during the migration. Which approach would you take to optimize the strategy?",
+                    "options": [
+                        {
+                            "text": "Perform a phased lift-and-shift migration for monoliths and refactor microservices to cloud-native patterns.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Re-architect all applications to cloud-native before migrating.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Use a hybrid cloud approach, keeping critical services on-prem temporarily while migrating less critical workloads.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Migrate all applications at once using automated tools with minimal testing.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 3,
+                                "ER": 4,
+                                "BP": 3
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 16,
+                    "prompt": "Company wants multi-cloud to reduce vendor lock-in, currently mostly on AWS. Teams are unfamiliar with multi-cloud tools, and costs could rise. Which approach implements multi-cloud effectively?",
+                    "options": [
+                        {
+                            "text": "Start by migrating non-critical workloads to a second cloud and use a cloud-agnostic management layer for orchestration.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Move all workloads immediately to multiple clouds for redundancy.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Use a single cloud for critical workloads and other clouds only for experimental projects.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Adopt multi-cloud tools first without migrating workloads, then gradually integrate production workloads.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 17,
+                    "prompt": "Designing network architecture for a large-scale SaaS platform. Requires secure communication, external access, and multi-region redundancy. Sensitive microservices must not be public. Which design choice is best?",
+                    "options": [
+                        {
+                            "text": "Use private subnets for sensitive services, public subnets for client-facing apps, and configure VPC peering or Transit Gateway for cross-region communication.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Place all services in public subnets and restrict access with security groups and NACLs.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 4,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Use a single flat network for all services and rely solely on application-level firewalls.",
+                            "score": {
+                                "TA": 3,
+                                "SL": 2,
+                                "ER": 2,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Deploy each service in a dedicated VPC and connect them with VPN tunnels.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 18,
+                    "prompt": "Designing cloud architecture for a video streaming platform with highly variable traffic (peak evenings, low mornings). How do you optimally balance cost, performance, and reliability?",
+                    "options": [
+                        {
+                            "text": "Implement dynamic auto-scaling based on CPU, memory, and request latency metrics, with predictive scaling for expected traffic peaks.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Set a high baseline of resources to handle peak traffic at all times.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Use only reactive scaling based on current load without predictive scaling.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Schedule resource scaling manually based on historical traffic patterns.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 19,
+                    "prompt": "Team struggles to identify issues quickly because logs, metrics, and traces are scattered across multiple cloud accounts. Incidents take hours to resolve. Which approach improves observability while keeping costs reasonable?",
+                    "options": [
+                        {
+                            "text": "Deploy a centralized observability stack (like Prometheus + Grafana + OpenTelemetry) aggregating logs, metrics, and traces.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use cloud-native monitoring tools (CloudWatch, Azure Monitor, etc.) per region and correlate manually during incidents.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Log only critical events to reduce volume and cost, ignoring non-critical metrics.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 4,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Use a third-party SaaS observability platform (Datadog, New Relic) for all services.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 20,
+                    "prompt": "Platform has dozens of microservices across multiple regions. Engineering wants consistent routing, security policies, and observability between services. Communication is currently unmanaged. Which strategy best improves communication and security?",
+                    "options": [
+                        {
+                            "text": "Implement a service mesh (e.g., Istio, Linkerd) for internal traffic management, security, and observability.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use an API gateway for external traffic and rely on application-level logic for internal service communication.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Deploy a lightweight proxy for each service without full service mesh features.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Use only DNS-based routing for inter-service communication, without additional proxies or gateways.",
+                            "score": {
+                                "TA": 4,
+                                "SL": 3,
+                                "ER": 4,
+                                "BP": 4
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Cybersecurity Analyst": {
+            "description": "Assesses immediate incident containment, compliance awareness, and security risk prioritization.",
+            "skills_required": [
+                "Technical Acumen",
+                "Strategic Leadership",
+                "Ethical Responsibility",
+                "Business Profitability"
+            ],
+            "questions": [
+                {
+                    "id": 21,
+                    "prompt": "Multiple employees report phishing emails; some clicked links but did not enter credentials. What is the most effective immediate action?",
+                    "options": [
+                        {
+                            "text": "Isolate affected endpoints, conduct malware scans, and reset passwords for users who clicked the link.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Notify all employees about the phishing emails and ask them to delete suspicious messages.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Monitor network traffic for suspicious activity while investigating affected endpoints.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Block the sender domains at the email gateway and continue normal operations.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 22,
+                    "prompt": "A file server shows unusual encryption activity, indicating a ransomware infection. Downtime could cost millions. What should you do first to contain the incident?",
+                    "options": [
+                        {
+                            "text": "Disconnect the affected server from the network immediately and isolate backup systems.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Shut down all servers across the network as a precaution.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 6,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Notify management and start restoring systems from the last known clean backup.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Scan the network for the ransomware signature to identify infected hosts.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 23,
+                    "prompt": "A user account is accessing sensitive systems unusually frequently outside business hours and attempting multiple sudo commands. What is the best course of action to investigate and prevent a potential insider threat?",
+                    "options": [
+                        {
+                            "text": "Temporarily disable the account and review all recent activity logs across systems.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Notify HR and management before taking any action.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 7,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Monitor the account closely while continuing normal operations.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 5,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Force a password reset and require multi-factor authentication.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 24,
+                    "prompt": "Traffic spikes dramatically, causing slow response times and intermittent outages, suggesting a DDoS attack. What is the most effective way to mitigate the attack while keeping the service available?",
+                    "options": [
+                        {
+                            "text": "Enable DDoS protection services (e.g., AWS Shield, Cloudflare) and rate-limit traffic at the edge.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Shut down the web servers to stop the attack from affecting the network.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 3,
+                                "ER": 4,
+                                "BP": 2
+                            }
+                        },
+                        {
+                            "text": "Redirect traffic through a scrubbing service or CDN for filtering malicious requests.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Monitor the attack and inform stakeholders before taking any defensive action.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 25,
+                    "prompt": "A vulnerability report shows multiple high-severity CVEs with public exploits. The IT team is concerned about patching immediately due to production impact. Which approach balances security and operational continuity?",
+                    "options": [
+                        {
+                            "text": "Prioritize patching high-severity vulnerabilities immediately on critical systems, using maintenance windows to minimize downtime.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Test patches in a staging environment before applying them to production.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Apply temporary mitigation controls (e.g., firewall rules, configuration changes) and patch later.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Delay all patching until the next quarterly maintenance cycle to avoid disruptions.",
+                            "score": {
+                                "TA": 4,
+                                "SL": 3,
+                                "ER": 5,
+                                "BP": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 26,
+                    "prompt": "A misconfigured public S3 bucket exposes customer data. What is the best immediate course of action to remediate and understand the scope of exposure?",
+                    "options": [
+                        {
+                            "text": "Make the bucket private immediately, audit access logs, and notify affected stakeholders if data was exposed.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Review the bucket permissions thoroughly before taking any action.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Enable versioning and logging for the bucket to monitor access while keeping it public temporarily.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 4,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Notify management and security compliance teams first, then take action.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 27,
+                    "prompt": "Multiple high-priority SIEM alerts indicate repeated failed login attempts on admin accounts across multiple servers. What is the most effective response to contain the threat?",
+                    "options": [
+                        {
+                            "text": "Temporarily lock the affected accounts, investigate logs, and notify the IT/security team.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Monitor the alerts while keeping accounts active to avoid disruption.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Force all users to reset passwords immediately.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Update firewall rules to block suspicious IP addresses temporarily.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 28,
+                    "prompt": "A workstation shows abnormal outbound connections to a suspicious IP, but antivirus shows no malware. What is the best course of action?",
+                    "options": [
+                        {
+                            "text": "Isolate the workstation from the network immediately and perform a forensic investigation.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Run a full antivirus scan and monitor network activity while keeping the device online.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Notify the user and ask them to stop using the workstation temporarily.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Block suspicious IPs at the firewall and continue normal operations.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 29,
+                    "prompt": "A new malware variant is detected. Several endpoints report unusual file activity and encrypted files. You need to contain the outbreak quickly.",
+                    "options": [
+                        {
+                            "text": "Isolate affected endpoints, disable shared drives temporarily, and initiate malware scans.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Notify all employees to shut down their systems.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 4
+                            }
+                        },
+                        {
+                            "text": "Roll out emergency antivirus definitions and monitoring updates across all endpoints.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Back up all critical systems before taking any action.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 30,
+                    "prompt": "An employee is accessing sensitive HR and financial data outside normal business hours. The access pattern is highly unusual. What is the most effective way to respond?",
+                    "options": [
+                        {
+                            "text": "Temporarily suspend the user’s access and review all recent activity logs across critical systems.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Alert HR and management before taking any technical action.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 7,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Monitor the user closely while leaving access active.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 4,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Require multi-factor authentication and password reset for the user.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Frontend Developer": {
+            "description": "Assesses decisions on web performance, accessibility, state management, and modern development best practices.",
+            "skills_required": [
+                "Technical Acumen",
+                "Strategic Leadership",
+                "Ethical Responsibility",
+                "Business Profitability"
+            ],
+            "questions": [
+                {
+                    "id": 31,
+                    "prompt": "Users report your SPA is slow to load, especially on mobile. The bundle includes all JS/CSS in one large file, and images are not optimized. What is the most effective approach to improve load performance?",
+                    "options": [
+                        {
+                            "text": "Split the JavaScript bundle using code-splitting/lazy loading, and optimize images using modern formats like WebP.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Minify and compress JavaScript and CSS files.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Remove unused third-party libraries from the project.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Implement server-side rendering (SSR) for the SPA.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 32,
+                    "prompt": "A recent design update broke the layout on smaller screens (buttons overlap, images overflow). What is the most effective way to fix the issue?",
+                    "options": [
+                        {
+                            "text": "Implement CSS media queries for different screen sizes and test on common devices.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use a mobile-first CSS framework like Bootstrap or Tailwind and rewrite the layout.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Reduce font sizes and image dimensions globally for smaller screens.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Create separate pages for mobile and desktop.",
+                            "score": {
+                                "TA": 4,
+                                "SL": 3,
+                                "ER": 4,
+                                "BP": 3
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 33,
+                    "prompt": "Your React application is growing complex, with multiple components needing shared state. Currently, you’re using prop drilling, which is causing performance and debugging issues. What is the best approach to handle shared state efficiently?",
+                    "options": [
+                        {
+                            "text": "Implement a global state management library like Redux or Zustand.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Lift state up to the nearest common ancestor component.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Use React Context API for shared state across components.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Keep prop drilling and optimize rendering using React.memo and useCallback.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 34,
+                    "prompt": "Your web application is not accessible to users with disabilities. Screen readers cannot interpret forms, and color contrast is insufficient. Which approach best improves accessibility while keeping development practical?",
+                    "options": [
+                        {
+                            "text": "Add semantic HTML elements, proper ARIA attributes, and ensure color contrast meets WCAG standards.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Add descriptive alt text for images and label inputs, but leave other issues for later.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Implement a third-party accessibility plugin to auto-fix issues.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Create a separate mobile-friendly accessible version of the site.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 3,
+                                "ER": 4,
+                                "BP": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 35,
+                    "prompt": "User input in a comment section is rendered without proper sanitization, indicating potential Cross-Site Scripting (XSS) vulnerabilities. What is the best way to mitigate this risk?",
+                    "options": [
+                        {
+                            "text": "Escape and sanitize all user-generated input on both client and server sides.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Encode HTML entities in the frontend before rendering user input.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Use a library like DOMPurify to sanitize content before rendering.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 9,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Block users who enter suspicious characters.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 36,
+                    "prompt": "You are building a large React application. Multiple pages require a similar card component, but developers are duplicating code. What is the best approach to improve maintainability and reduce duplication?",
+                    "options": [
+                        {
+                            "text": "Create a reusable card component that accepts props for style and content variations.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Keep duplicating components per page to match design exactly.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 4
+                            }
+                        },
+                        {
+                            "text": "Use higher-order components (HOCs) or render props to inject variations into the card component.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Style each card individually using inline styles.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 37,
+                    "prompt": "Users report layout issues and broken JS functionality in older browsers (IE11/Edge) due to modern features. What is the best strategy to ensure compatibility without degrading performance?",
+                    "options": [
+                        {
+                            "text": "Use a combination of polyfills for ES6 features and CSS fallbacks for unsupported browsers.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Rewrite the app using only features supported by all browsers.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Encourage users to upgrade browsers and drop support for older versions.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Use a CSS preprocessor like Sass to generate compatible styles and transpile JS using Babel.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 38,
+                    "prompt": "Your SPA has grown complex, and developers are pushing code frequently. Bugs are slipping into production. Which strategy best improves quality and reduces regression issues?",
+                    "options": [
+                        {
+                            "text": "Implement automated unit, integration, and end-to-end testing with CI/CD pipelines.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Rely solely on manual testing by QA before releases.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Add linting and code reviews for all pull requests.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Deploy feature flags for all new features to monitor issues in production.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 39,
+                    "prompt": "Your team wants faster deployments for a React application. Currently, builds are manual, tests are sporadic, and deployments are error-prone. What is the best way to improve deployment reliability and speed?",
+                    "options": [
+                        {
+                            "text": "Implement a CI/CD pipeline with automated builds, tests, and deployment using tools like GitHub Actions or Jenkins.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Automate only the build process while keeping testing and deployment manual.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Continue manual processes but enforce a strict checklist for QA and deployment.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Use a staging environment to manually verify each release before production.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 40,
+                    "prompt": "Your React app renders large lists of items on a dashboard. Users report that scrolling is janky. What is the most efficient way to improve rendering performance?",
+                    "options": [
+                        {
+                            "text": "Implement virtualized lists (e.g., react-window) to render only visible items.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Paginate the list to show fewer items per page.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Memoize list items using React.memo and optimize rendering.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Delay rendering the list items using setTimeout to spread computation.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Backend Developer": {
+            "description": "Assesses decisions on system scalability, database performance, security, and incident handling for core APIs.",
+            "skills_required": [
+                "Technical Acumen",
+                "Strategic Leadership",
+                "Ethical Responsibility",
+                "Business Profitability"
+            ],
+            "questions": [
+                {
+                    "id": 41,
+                    "prompt": "During a flash sale, checkout latency jumps from 150ms to 2s, and CPU usage hits 90%. DB and network look normal. What’s your next step to stabilize performance fast?",
+                    "options": [
+                        {
+                            "text": "Scale out checkout service instances via auto-scaling.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Profile checkout service for inefficient code.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Restart checkout containers to clear load.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Disable non-critical checkout features.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 6,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 42,
+                    "prompt": "After a new deployment, users report intermittent 500 errors from the login service, showing timeouts when calling the user profile API. You must stabilize quickly. What should you do first?",
+                    "options": [
+                        {
+                            "text": "Rollback the latest deployment of the login service.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Increase timeout limits between services.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Restart login pods to reset connections.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Throttle incoming traffic to reduce load temporarily.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 43,
+                    "prompt": "When designing a REST API that handles large datasets, what’s the most efficient way to allow clients to fetch data without overloading the server?",
+                    "options": [
+                        {
+                            "text": "Implement pagination using limit and offset parameters.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Return all data at once in a single response.",
+                            "score": {
+                                "TA": 3,
+                                "SL": 2,
+                                "ER": 4,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Use server-side caching with ETag or Last-Modified headers.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Implement cursor-based pagination for large or dynamic datasets.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 44,
+                    "prompt": "Your PostgreSQL database CPU spikes to 95% during peak traffic. Queries from the order service are running slower. What should you do first to restore performance quickly without causing downtime?",
+                    "options": [
+                        {
+                            "text": "Add a read replica and route read queries to it.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Analyze slow queries and optimize indexes.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Restart the database to clear cache and locks.",
+                            "score": {
+                                "TA": 4,
+                                "SL": 3,
+                                "ER": 4,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Temporarily increase instance size (vertical scaling).",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 45,
+                    "prompt": "A CI/CD pipeline failed halfway, leaving half of your microservices updated and the rest on the old version. APIs return inconsistent data. What should you prioritize next?",
+                    "options": [
+                        {
+                            "text": "Trigger an immediate full rollback to the last stable release.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Deploy the remaining services to match the new version.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Patch only the affected APIs manually to handle both versions.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Pause all deployments and start debugging the pipeline error.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 46,
+                    "prompt": "You need to store user session data for a web application. Which approach is most efficient in terms of performance, scalability, and reliability?",
+                    "options": [
+                        {
+                            "text": "Store sessions in memory on the application server.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Use a centralized Redis store for sessions.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Store sessions in a relational database (e.g., PostgreSQL).",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Store sessions as signed cookies on the client.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 47,
+                    "prompt": "You want to improve database read performance for a high-traffic application. Which approach is most effective?",
+                    "options": [
+                        {
+                            "text": "Add read replicas to the database cluster.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Optimize slow queries with proper indexing.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Cache frequent query results in an in-memory store (e.g., Redis).",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use database sharding to split data across multiple nodes.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 48,
+                    "prompt": "You need to secure APIs that are exposed to external clients. Which approach is most efficient and scalable?",
+                    "options": [
+                        {
+                            "text": "Use API keys for authentication.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Implement OAuth 2.0 with access tokens.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Authenticate requests using JWTs (JSON Web Tokens).",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 9,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Restrict access by IP whitelisting.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 49,
+                    "prompt": "You want to reduce API response time for a service that reads frequently updated data. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Use an in-memory cache like Redis for frequently accessed data.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Optimize database queries and add proper indexes.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Return compressed responses (e.g., gzip) to reduce payload size.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Implement client-side caching with short TTLs.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 50,
+                    "prompt": "You need to handle high traffic spikes for a web service efficiently. Which approach is best?",
+                    "options": [
+                        {
+                            "text": "Use horizontal scaling to add more instances behind a load balancer.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Increase the CPU and memory of the existing instance (vertical scaling).",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Implement request throttling or rate limiting.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Cache frequently accessed responses at the edge (CDN).",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "Data Scientist / ML Engineer": {
+            "description": "Assesses decisions on model efficiency, data balancing, dimensionality reduction, and production deployment.",
+            "skills_required": [
+                "Technical Acumen",
+                "Strategic Leadership",
+                "Ethical Responsibility",
+                "Business Profitability"
+            ],
+            "questions": [
+                {
+                    "id": 51,
+                    "prompt": "You are training a machine learning model for predicting customer churn. The training dataset is very large, and training is taking hours to complete. What should you do first to speed up training without sacrificing accuracy?",
+                    "options": [
+                        {
+                            "text": "Use mini-batch gradient descent instead of full-batch.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Reduce the number of features using feature selection.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Sample a smaller subset of the dataset.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Use a simpler model (e.g., logistic regression instead of XGBoost).",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 52,
+                    "prompt": "Which technique is most efficient for handling missing values in a large dataset without losing much information?",
+                    "options": [
+                        {
+                            "text": "Drop rows with missing values.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 4
+                            }
+                        },
+                        {
+                            "text": "Impute with mean/median values.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Use model-based imputation (e.g., KNN).",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Predict missing values using a separate model.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 53,
+                    "prompt": "You want to reduce dimensionality for a dataset with hundreds of features. Which approach is most effective?",
+                    "options": [
+                        {
+                            "text": "Principal Component Analysis (PCA).",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Remove features with low variance.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Use feature selection via correlation threshold.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Train a tree-based model and use feature importances.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 54,
+                    "prompt": "For an imbalanced classification problem, which method is most effective to improve model performance?",
+                    "options": [
+                        {
+                            "text": "Oversample the minority class (e.g., SMOTE).",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 9,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Undersample the majority class.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Use class-weighted loss function.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Generate synthetic data for minority class.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 55,
+                    "prompt": "Which is the most efficient way to prevent overfitting in a machine learning model?",
+                    "options": [
+                        {
+                            "text": "Use cross-validation to tune hyperparameters.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Collect more training data.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Add regularization (L1/L2).",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Reduce model complexity.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 56,
+                    "prompt": "You deployed an ML model to production, but real-time predictions are slower than required, causing delays in user-facing applications. What should you do first to improve latency?",
+                    "options": [
+                        {
+                            "text": "Convert the model to a lighter format (e.g., ONNX or TensorRT).",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Serve predictions in batches instead of single requests.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Increase server resources (CPU/GPU).",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Simplify the model by reducing layers or features.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 5,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 57,
+                    "prompt": "Your neural network is overfitting on the training data. Validation accuracy is much lower than training accuracy. Which action is most effective to reduce overfitting?",
+                    "options": [
+                        {
+                            "text": "Add dropout layers in the network.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Collect more training data.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Reduce model complexity (fewer layers or neurons).",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Use L2 regularization on weights.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 58,
+                    "prompt": "You want to evaluate a regression model. Which metric is most efficient if you want to penalize large errors more heavily?",
+                    "options": [
+                        {
+                            "text": "Mean Absolute Error (MAE).",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Mean Squared Error (MSE).",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Root Mean Squared Error (RMSE).",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "R² Score.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 59,
+                    "prompt": "You need to handle categorical features in a dataset for a tree-based model. Which method is most efficient?",
+                    "options": [
+                        {
+                            "text": "One-hot encoding.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Label encoding.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Target encoding (mean encoding).",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use embedding layers (for neural networks).",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 60,
+                    "prompt": "You want to reduce training time for a gradient boosting model on a large dataset. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Use a smaller subset of the dataset.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Reduce the number of boosting rounds.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Use histogram-based boosting (e.g., LightGBM).",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Decrease maximum tree depth.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "UI/UX Designer": {
+            "description": "Assesses decisions on usability, accessibility (A11Y), information architecture, and cognitive load management.",
+            "skills_required": [
+                "Technical Acumen",
+                "Strategic Leadership",
+                "Ethical Responsibility",
+                "Business Profitability"
+            ],
+            "questions": [
+                {
+                    "id": 61,
+                    "prompt": "Users are struggling to find key features in your app. What is the most efficient way to improve discoverability?",
+                    "options": [
+                        {
+                            "text": "Add tooltips and hints next to features.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Conduct usability testing and iterate based on feedback.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Increase font size and contrast of all features.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 7,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Add a “Getting Started” walkthrough.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 62,
+                    "prompt": "You want to improve the conversion rate on a sign-up form. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Reduce the number of fields to only essential information.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Add microcopy explaining why each field is needed.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use a multi-step form with progress indicators.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Highlight the submit button with bright color and animation.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 63,
+                    "prompt": "Users report confusion navigating your app. Which method is most efficient to improve navigation?",
+                    "options": [
+                        {
+                            "text": "Conduct a card-sorting exercise with users.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Add more descriptive labels to menu items.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Add a search bar for all pages.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use standard icons for common actions.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 64,
+                    "prompt": "You need to make your mobile app more accessible. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Ensure sufficient color contrast for text and backgrounds.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Add alt text to all images.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 9,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Enable dynamic text sizing and responsive layouts.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 10,
+                                "ER": 10,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Add audio descriptions for key visuals.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 9,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 65,
+                    "prompt": "You want to reduce cognitive load in a dashboard with multiple metrics. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Group related metrics together and use clear headings.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Use charts and visualizations instead of tables.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Remove non-essential metrics from the main view.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Use consistent colors and fonts throughout.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 66,
+                    "prompt": "You are designing a new onboarding flow for a mobile app. Which approach is most efficient to ensure users complete it?",
+                    "options": [
+                        {
+                            "text": "Use progressive disclosure to show information step by step.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Add a skip button on all onboarding screens.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Include illustrations and animations to guide users.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Provide a detailed tutorial PDF after signup.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 67,
+                    "prompt": "Users abandon the checkout page frequently. Which change is most efficient to improve conversion?",
+                    "options": [
+                        {
+                            "text": "Simplify the checkout form and reduce steps.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Add trust signals like security badges.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 9,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Offer multiple payment options.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Highlight discounts or offers at checkout.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 68,
+                    "prompt": "Your app needs better visual hierarchy to guide users’ attention. Which is most efficient?",
+                    "options": [
+                        {
+                            "text": "Use size and color contrast to emphasize key elements.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Add icons next to headings.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Group related content in cards or sections.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use animations to highlight actions.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 69,
+                    "prompt": "You want to increase accessibility for users with motor impairments. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Ensure all buttons are large enough and have enough spacing.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 10,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Support keyboard navigation.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 9,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Enable voice commands for key actions.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 8,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Avoid time-limited interactions.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 9,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 70,
+                    "prompt": "Your dashboard shows too many notifications, overwhelming users. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Prioritize and group notifications by importance.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 10,
+                                "ER": 9,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Allow users to customize notification preferences.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Display only the most recent notifications by default.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Use color coding to differentiate notifications.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "QA / Automation Tester": {
+            "description": "Assesses decisions on test strategy, coverage optimization, automation effectiveness, and root cause analysis.",
+            "skills_required": [
+                "Technical Acumen",
+                "Strategic Leadership",
+                "Ethical Responsibility",
+                "Business Profitability"
+            ],
+            "questions": [
+                {
+                    "id": 71,
+                    "prompt": "A new build is deployed to staging. Regression testing is taking too long. What is the most efficient first step?",
+                    "options": [
+                        {
+                            "text": "Run automated regression test suite instead of manual testing.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Prioritize critical test cases and run them first.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 9,
+                                "ER": 7,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Run all tests in parallel using a CI/CD pipeline.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Manually test only the areas most likely to break.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 72,
+                    "prompt": "You are designing test cases for a new feature. Which approach is most efficient for high coverage with minimal redundancy?",
+                    "options": [
+                        {
+                            "text": "Equivalence partitioning and boundary value analysis.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Ad-hoc testing to explore edge cases.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Use decision table testing.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Prioritize tests based on risk impact.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 73,
+                    "prompt": "You need to ensure cross-browser compatibility for a web application. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Use automated browser testing tools (e.g., Selenium, Cypress).",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Test manually on all popular browsers.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Test only on the most widely used browser.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Use cloud-based cross-browser testing services.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 74,
+                    "prompt": "You are tasked with validating performance of an API under load. Which method is most efficient?",
+                    "options": [
+                        {
+                            "text": "Use load testing tools (e.g., JMeter, Locust).",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Monitor API response times during manual testing.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 5
+                            }
+                        },
+                        {
+                            "text": "Analyze logs for slow endpoints.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Implement performance profiling in code.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 75,
+                    "prompt": "You need to maintain a stable automated test suite for a frequently changing application. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Refactor tests regularly to match application updates.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Use stable locators (IDs or data attributes) instead of XPath/CSS.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Skip tests that frequently fail.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 4,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Introduce retries for flaky tests.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 76,
+                    "prompt": "You notice some automated tests fail intermittently (flaky tests). What’s the most efficient way to address them?",
+                    "options": [
+                        {
+                            "text": "Investigate and fix the root cause in the test or application.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Add retries for flaky tests.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 6,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Ignore flaky tests in the suite.",
+                            "score": {
+                                "TA": 4,
+                                "SL": 3,
+                                "ER": 4,
+                                "BP": 3
+                            }
+                        },
+                        {
+                            "text": "Isolate flaky tests in a separate suite.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 77,
+                    "prompt": "You are setting up a CI/CD pipeline. Which practice is most efficient to ensure high-quality releases?",
+                    "options": [
+                        {
+                            "text": "Run automated unit and integration tests on every commit.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Run full regression suite only before release.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Run tests only when a feature branch is merged.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Rely on manual QA after deployment.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 78,
+                    "prompt": "You want to improve test coverage for a complex module. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Write automated unit tests for all functions.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Add integration tests between modules.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 7,
+                                "BP": 8
+                            }
+                        },
+                        {
+                            "text": "Perform exploratory manual testing.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        },
+                        {
+                            "text": "Use code coverage tools to identify untested areas.",
+                            "score": {
+                                "TA": 8,
+                                "SL": 7,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 79,
+                    "prompt": "Your team is releasing a major feature and wants to minimize production bugs. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Perform automated regression tests on all impacted modules.",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Do full manual QA testing before release.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Release to a limited beta group first.",
+                            "score": {
+                                "TA": 9,
+                                "SL": 8,
+                                "ER": 8,
+                                "BP": 9
+                            }
+                        },
+                        {
+                            "text": "Rely on unit tests only.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 80,
+                    "prompt": "You need to test an API under heavy traffic for reliability. Which approach is most efficient?",
+                    "options": [
+                        {
+                            "text": "Use load testing with realistic simulated traffic (e.g., JMeter, Locust).",
+                            "score": {
+                                "TA": 10,
+                                "SL": 9,
+                                "ER": 8,
+                                "BP": 10
+                            }
+                        },
+                        {
+                            "text": "Manually trigger requests to check performance.",
+                            "score": {
+                                "TA": 5,
+                                "SL": 4,
+                                "ER": 5,
+                                "BP": 4
+                            }
+                        },
+                        {
+                            "text": "Monitor production traffic for issues.",
+                            "score": {
+                                "TA": 7,
+                                "SL": 6,
+                                "ER": 7,
+                                "BP": 7
+                            }
+                        },
+                        {
+                            "text": "Increase server capacity before testing.",
+                            "score": {
+                                "TA": 6,
+                                "SL": 5,
+                                "ER": 6,
+                                "BP": 6
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

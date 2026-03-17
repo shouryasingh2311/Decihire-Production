@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>DeciHier | WorkDNA Assessment — Enter The Simulation</title>
+  <meta name="description" content="A psychometric decision simulator. Every choice reveals your true nature.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Flask-injected JS data -->
+  <script>
+    const IS_LOGGED_IN = '{{ is_logged_in | tojson | safe }}' === 'true';
+    const ASSIGNED_ROLE = '{{ session.assigned_role or "" }}';
+    const JOB_PROFILES = {{ job_profiles | tojson | safe }};
+    const PASS_THRESHOLD = {{ ASSESSMENT_DATA.PASS_THRESHOLD | tojson | safe }};
+  </script>
+
+  <style>
+    /* ============================================
+       ROOT VARIABLES
+    ============================================ */
+    :root {
+      --crimson: #DC143C;
+      --crimson-dark: #8B0000;
+      --crimson-glow: rgba(220, 20, 60, 0.35);
+      --white: #FFFFFF;
+      --off-white: #E8E8E8;
+      --gray-dim: #555566;
+      --black: #000000;
+    }
+
+    /* ============================================
+       BASE RESET
+    ============================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 15px; /* slightly smaller base = better at 100% zoom */
+    }
+
+    body {
+      background: #000;
+      color: var(--white);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Film grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 256px;
+      animation: grain 0.3s steps(1) infinite;
+    }
+
+    @keyframes grain {
+      0%   { transform: translate(0,0); }
+      10%  { transform: translate(-2%,-3%); }
+      20%  { transform: translate(3%,2%); }
+      30%  { transform: translate(-1%,4%); }
+      40%  { transform: translate(2%,-1%); }
+      50%  { transform: translate(-3%,3%); }
+      60%  { transform: translate(1%,-2%); }
+      70%  { transform: translate(-2%,1%); }
+      80%  { transform: translate(3%,-3%); }
+      90%  { transform: translate(-1%,2%); }
+      100% { transform: translate(2%,0); }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: var(--crimson); }
+
+    /* ============================================
+       TOP NAV
+    ============================================ */
+    #top-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+      backdrop-filter: blur(4px);
+    }
+
+    .brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.2em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .brand span { color: var(--crimson); }
+
+    .nav-logout {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-logout:hover { color: var(--crimson); border-color: rgba(220,20,60,0.4); }
+
+    /* ============================================
+       HERO — full-screen landing
+    ============================================ */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url("{{ url_for('static', filename='images/hero_bg.png') }}");
+      background-size: cover;
+      background-position: center;
+      opacity: 0.35;
+      z-index: 0;
+    }
+
+    #hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, #000 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 5rem 1.5rem 3rem;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--crimson);
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      line-height: 0.9;
+      color: var(--white);
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 60px rgba(220,20,60,0.2);
+    }
+
+    .hero-title .accent { color: var(--crimson); }
+
+    .hero-subtitle {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+      line-height: 1.6;
+    }
+
+    .noise-divider {
+      width: 100%;
+      max-width: 320px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(220,20,60,0.5), transparent);
+    }
+
+    /* Crimson decorative lines */
+    .crimson-line {
+      display: block;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, var(--crimson), transparent);
+      animation: linePulse 2s ease-in-out infinite;
+      position: absolute;
+    }
+    @keyframes linePulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--crimson); }
+      50%       { opacity: 0.3; box-shadow: 0 0 2px var(--crimson); }
+    }
+
+    /* ============================================
+       LOGIN CARD (appears on hero, stays visible)
+    ============================================ */
+    .glass-card {
+      background: rgba(8, 0, 0, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(220,20,60,0.35);
+      border-top: 3px solid var(--crimson);
+      border-radius: 2px;
+      box-shadow: 0 0 40px rgba(220,20,60,0.12), inset 0 0 60px rgba(0,0,0,0.5);
+      width: 100%;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(220,20,60,0.3);
+      color: var(--white);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      padding: 0.75rem 1rem;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .form-input:focus {
+      border-color: var(--crimson);
+      box-shadow: 0 0 0 3px rgba(220,20,60,0.12);
+    }
+    select.form-input option { background: #120000; }
+
+    .btn-crimson {
+      width: 100%;
+      background: var(--crimson);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: 0 0 20px rgba(220,20,60,0.4);
+    }
+    .btn-crimson:hover {
+      background: #FF2D55;
+      box-shadow: 0 0 35px rgba(220,20,60,0.6);
+      transform: translateY(-2px);
+    }
+    .btn-crimson:disabled {
+      background: #4a0a0a;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+      opacity: 0.6;
+    }
+
+    .role-badge {
+      display: inline-block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      color: var(--crimson);
+      border: 1px solid var(--crimson);
+      padding: 0.25rem 0.85rem;
+    }
+
+    .detail-block {
+      background: rgba(220,20,60,0.05);
+      border: 1px solid rgba(220,20,60,0.2);
+      border-left: 3px solid var(--crimson);
+      padding: 0.85rem 1rem;
+      border-radius: 2px;
+    }
+
+    .error-msg {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--crimson);
+      letter-spacing: 0.05em;
+      padding: 0.4rem 0.6rem;
+      border-left: 2px solid var(--crimson);
+      background: rgba(220,20,60,0.06);
+    }
+
+    /* ============================================
+       SCROLL CUE
+    ============================================ */
+    .scroll-cue {
+      position: absolute;
+      bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .scroll-cue span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--gray-dim);
+      text-transform: uppercase;
+    }
+    .scroll-arrow {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--crimson), transparent);
+      animation: arrowPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes arrowPulse {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50%       { opacity: 0.3; transform: scaleY(0.7); }
+    }
+
+    /* ============================================
+       PROFILES SECTION — two-column layout
+    ============================================ */
+    #main-layout {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      min-height: 100vh;
+      gap: 0;
+    }
+
+    /* Left column: sticky login panel */
+    #sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5rem 2rem 2rem;
+      border-right: 1px solid rgba(220,20,60,0.1);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .sidebar-heading {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.4em;
+      color: var(--crimson);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 0.95;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+    .sidebar-title span { color: var(--crimson); }
+
+    /* Right column: scrollable profiles */
+    #profiles-col {
+      padding: 5rem 2.5rem 4rem;
+    }
+
+    .profiles-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--crimson);
+    }
+
+    .profiles-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      color: var(--white);
+      margin: 0.4rem 0 0.75rem;
+    }
+    .profiles-heading span { color: var(--crimson); }
+
+    /* ============================================
+       DOSSIER CARDS
+    ============================================ */
+    .dossier-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .dossier-card {
+      position: relative;
+      background: rgba(10, 0, 0, 0.88);
+      border: 1px solid rgba(220,20,60,0.2);
+      border-left: 3px solid var(--crimson);
+      padding: 1.25rem 1.5rem 1.25rem 1.25rem;
+      cursor: pointer;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      overflow: hidden;
+    }
+    .dossier-card:hover {
+      border-color: var(--crimson);
+      box-shadow: 0 0 30px rgba(220,20,60,0.2), inset 0 0 30px rgba(220,20,60,0.04);
+      transform: translateX(5px);
+    }
+    .dossier-card::before {
+      content: 'CLASSIFIED';
+      position: absolute;
+      top: 1rem;
+      right: -1.5rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: rgba(220,20,60,0.25);
+      transform: rotate(90deg);
+    }
+
+    /* Job icon container */
+    .job-icon {
+      flex-shrink: 0;
+      width: 52px;
+      height: 52px;
+      background: rgba(220,20,60,0.08);
+      border: 1px solid rgba(220,20,60,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 2px;
+    }
+    .job-icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .dossier-body { flex: 1; min-width: 0; }
+
+    .dossier-id {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--crimson);
+      letter-spacing: 0.3em;
+      margin-bottom: 0.3rem;
+    }
+
+    .dossier-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+      line-height: 1;
+    }
+
+    .dossier-desc {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .dossier-meta {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.6rem;
+    }
+    .dossier-meta-item {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.05em;
+    }
+    .dossier-meta-item span { color: var(--off-white); }
+
+    .dossier-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .skill-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid rgba(220,20,60,0.35);
+      color: rgba(220,20,60,0.8);
+      text-transform: uppercase;
+    }
+
+    /* ============================================
+       GLITCH
+    ============================================ */
+    .glitch { position: relative; }
+    .glitch:hover::before, .glitch:hover::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      overflow: hidden;
+    }
+    .glitch:hover::before {
+      color: #DC143C;
+      animation: glitch1 0.3s steps(2, end) infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+      transform: translate(-3px, -1px);
+    }
+    .glitch:hover::after {
+      color: #00CFDD;
+      animation: glitch2 0.3s steps(2, end) infinite;
+      clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+      transform: translate(3px, 1px);
+    }
+    @keyframes glitch1 {
+      0%   { transform: translate(-3px, -1px); }
+      50%  { transform: translate(3px, 1px); }
+      100% { transform: translate(-3px, -1px); }
+    }
+    @keyframes glitch2 {
+      0%   { transform: translate(3px, 1px); }
+      50%  { transform: translate(-3px, -1px); }
+      100% { transform: translate(3px, 1px); }
+    }
+
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @media (max-width: 860px) {
+      #main-layout {
+        grid-template-columns: 1fr;
+      }
+      #sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(220,20,60,0.1);
+        padding: 5rem 1.5rem 2rem;
+      }
+      #profiles-col {
+        padding: 2.5rem 1.5rem 4rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── TOP NAV ── -->
+  <nav id="top-nav">
+    <a class="brand" href="/">DECI<span>HIER</span></a>
+    {% if is_logged_in %}
+    <a href="{{ url_for('logout') }}" class="nav-logout">LOGOUT</a>
+    {% endif %}
+  </nav>
+
+  <!-- ============================================================
+       HERO SECTION (full-screen landing)
+  ============================================================ -->
+  <section id="hero">
+    <div id="hero-bg"></div>
+
+    <!-- decorative lines -->
+    <span class="crimson-line" style="left:3rem;top:15%;height:28%;"></span>
+    <span class="crimson-line" style="right:3rem;bottom:18%;height:22%;"></span>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow" id="hero-eyebrow">// WORKDNA PSYCHOMETRIC ASSESSMENT SYSTEM //</p>
+
+      <h1 class="hero-title glitch" id="hero-title" data-text="WHAT DOES YOUR DECISION SAY ABOUT YOU?">
+        WHAT DOES<br>
+        YOUR <span class="accent">DECISION</span><br>
+        SAY ABOUT YOU?
+      </h1>
+
+      <div class="noise-divider"></div>
+
+      <p class="hero-subtitle" id="hero-subtitle">
+        A psychometric decision simulator.<br>
+        Every choice reveals your true nature.
+      </p>
+
+      <!-- ── LOGIN / ROLE CARD ── -->
+      <div id="login-card" class="glass-card" style="padding:1.75rem;margin-top:0.5rem;">
+        {% if not is_logged_in %}
+        <!-- LOGIN FORM -->
+        <p style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;color:var(--crimson);margin-bottom:1.25rem;text-transform:uppercase;">// Candidate Authentication</p>
+        <form action="{{ url_for('login') }}" method="POST" style="display:flex;flex-direction:column;gap:0.75rem;">
+          <input class="form-input" type="text" name="name" placeholder="CANDIDATE FULL NAME" required autocomplete="off">
+          <input class="form-input" type="text" name="test_id" placeholder="EMPLOYER TEST ID (e.g. test123)" required autocomplete="off">
+          <button type="submit" class="btn-crimson" style="margin-top:0.3rem;">ENTER THE SIMULATION</button>
+        </form>
+        {% if error %}
+        <p class="error-msg" style="margin-top:0.75rem;">⚠ {{ error }}</p>
+        {% endif %}
+
+        {% else %}
+        <!-- LOGGED IN -->
+        <p style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;color:var(--crimson);margin-bottom:0.75rem;text-transform:uppercase;">// Subject Authenticated</p>
+        <p style="font-size:0.75rem;color:rgba(255,255,255,0.45);margin-bottom:0.25rem;">SUBJECT IDENTITY</p>
+        <p style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.1em;color:var(--white);margin-bottom:1.25rem;">{{ session.candidate_name }}</p>
+
+        {% if session.assigned_role %}
+        <p style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-bottom:0.4rem;font-family:'Space Mono',monospace;letter-spacing:0.15em;">ASSIGNED SIMULATION</p>
+        <span class="role-badge">{{ session.assigned_role }}</span>
+        {% else %}
+        <p style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-bottom:0.4rem;font-family:'Space Mono',monospace;letter-spacing:0.15em;">SELECT SIMULATION MODULE</p>
+        <select class="form-input" id="job-select" onchange="fetchJobDetails(this.value)">
+          {% for job_key in job_profiles.keys() %}
+          <option value="{{ job_key }}">{{ job_key }}</option>
+          {% endfor %}
+        </select>
+        {% endif %}
+
+        <div id="job-details" style="margin-top:1rem;"></div>
+        <p id="error-message" class="error-msg" style="margin-top:0.4rem;display:none;"></p>
+
+        <button id="start-assessment-btn" onclick="startAssessment()" disabled class="btn-crimson" style="margin-top:1rem;">
+          INITIATE ASSESSMENT
+        </button>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="scroll-cue" id="scroll-cue">
+      <span>Scroll to explore roles</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MAIN TWO-COLUMN LAYOUT
+  ============================================================ -->
+  <div id="main-layout">
+
+    <!-- ── LEFT SIDEBAR: sticky login/status panel ── -->
+    <aside id="sidebar">
+      <p class="sidebar-heading">// HR SIMULATION SYSTEM</p>
+      <h2 class="sidebar-title">CHOOSE<br>YOUR <span>ROLE</span></h2>
+
+      <div class="glass-card" style="padding:1.5rem;" id="sidebar-card">
+        {% if not is_logged_in %}
+        <p style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;color:var(--crimson);margin-bottom:1rem;text-transform:uppercase;">// Candidate Authentication</p>
+        <form action="{{ url_for('login') }}" method="POST" style="display:flex;flex-direction:column;gap:0.65rem;">
+          <input class="form-input" type="text" name="name" placeholder="CANDIDATE FULL NAME" required autocomplete="off">
+          <input class="form-input" type="text" name="test_id" placeholder="TEST ID (e.g. test123)" required autocomplete="off">
+          <button type="submit" class="btn-crimson" style="margin-top:0.2rem;">ENTER SIMULATION</button>
+        </form>
+        {% if error %}
+        <p class="error-msg" style="margin-top:0.65rem;">⚠ {{ error }}</p>
+        {% endif %}
+
+        {% else %}
+        <p style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;color:var(--crimson);margin-bottom:0.6rem;text-transform:uppercase;">// Subject Authenticated</p>
+        <p style="font-size:0.7rem;color:rgba(255,255,255,0.4);margin-bottom:0.2rem;">SUBJECT IDENTITY</p>
+        <p style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.1em;color:var(--white);margin-bottom:1rem;">{{ session.candidate_name }}</p>
+
+        {% if session.assigned_role %}
+        <p style="font-size:0.6rem;color:rgba(255,255,255,0.35);margin-bottom:0.35rem;font-family:'Space Mono',monospace;letter-spacing:0.12em;">ASSIGNED SIMULATION</p>
+        <span class="role-badge">{{ session.assigned_role }}</span>
+        {% else %}
+        <p style="font-size:0.6rem;color:rgba(255,255,255,0.35);margin-bottom:0.35rem;font-family:'Space Mono',monospace;letter-spacing:0.12em;">SELECT SIMULATION MODULE</p>
+        <select class="form-input" id="job-select-sidebar" onchange="fetchJobDetails(this.value)">
+          {% for job_key in job_profiles.keys() %}
+          <option value="{{ job_key }}">{{ job_key }}</option>
+          {% endfor %}
+        </select>
+        {% endif %}
+
+        <div id="job-details-sidebar" style="margin-top:0.85rem;"></div>
+        <p id="error-message-sidebar" class="error-msg" style="margin-top:0.35rem;display:none;"></p>
+
+        <button id="start-assessment-btn-sidebar" onclick="startAssessment()" disabled class="btn-crimson" style="margin-top:0.85rem;">
+          INITIATE ASSESSMENT
+        </button>
+        {% endif %}
+      </div>
+
+      <!-- HR link -->
+      <div style="margin-top:1.25rem;display:flex;gap:1.25rem;">
+        <a href="{{ url_for('hr_create_test') }}" style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:rgba(255,255,255,0.2);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--crimson)'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">→ HR PORTAL</a>
+        <a href="{{ url_for('hr_dashboard') }}" style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.15em;color:rgba(255,255,255,0.2);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--crimson)'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">→ DASHBOARD</a>
+      </div>
+    </aside>
+
+    <!-- ── RIGHT COLUMN: profiles list ── -->
+    <div id="profiles-col">
+      <div id="profiles-heading">
+        <p class="profiles-label">// CLASSIFIED ASSESSMENTS //</p>
+        <h2 class="profiles-heading">CHOOSE YOUR<br><span>SIMULATION</span></h2>
+        <p style="color:rgba(255,255,255,0.3);font-size:0.8rem;max-width:480px;line-height:1.6;">
+          Each module is engineered to expose the psychological architecture behind your professional decisions. Select a role. The system does the rest.
+        </p>
+      </div>
+
+      <!-- Job Dossier Cards -->
+      <div class="dossier-list" id="dossier-list">
+        {% for job_key, job_data in job_profiles.items() %}
+        <div class="dossier-card" data-job="{{ job_key }}" onclick="selectRole('{{ job_key }}')">
+          <div class="job-icon">
+            {{ get_job_icon(job_key) | safe }}
+          </div>
+          <div class="dossier-body">
+            <p class="dossier-id">FILE #{{ '%03d' % loop.index }}</p>
+            <h3 class="dossier-title">{{ job_key }}</h3>
+            <p class="dossier-desc">{{ job_data.description }}</p>
+            <div class="dossier-meta">
+              <div class="dossier-meta-item">QUESTIONS <span>{{ job_data.questions | length }}</span></div>
+              <div class="dossier-meta-item">THRESHOLD <span>{{ ASSESSMENT_DATA.PASS_THRESHOLD }}%</span></div>
+              <div class="dossier-meta-item">TIME <span>10 MIN</span></div>
+            </div>
+            <div class="dossier-skills">
+              {% for skill in job_data.skills_required %}
+              <span class="skill-tag">{{ skill }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div><!-- end #main-layout -->
+
+  <!-- ============================================================
+       GSAP + JS
+  ============================================================ -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // ── Hero entrance ──
+      gsap.set(['#hero-eyebrow', '#hero-title', '#hero-subtitle', '#login-card', '#scroll-cue'], { opacity: 0, y: 30 });
+      var heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      heroTl
+        .to('#hero-eyebrow',  { opacity: 1, y: 0, duration: 0.6, delay: 0.2 })
+        .to('#hero-title',    { opacity: 1, y: 0, duration: 0.9 }, '-=0.2')
+        .to('#hero-subtitle', { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+        .to('#login-card',    { opacity: 1, y: 0, duration: 0.6 }, '-=0.3')
+        .to('#scroll-cue',    { opacity: 1, duration: 0.4 }, '-=0.1');
+
+      // ── Sidebar card entrance ──
+      gsap.set('#sidebar-card', { opacity: 0, y: 20 });
+      gsap.to('#sidebar-card', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.5 });
+
+      // ── Profiles heading animation ──
+      gsap.set('#profiles-heading', { opacity: 0, y: 40 });
+      gsap.to('#profiles-heading', {
+        opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: '#profiles-heading', start: 'top 88%', toggleActions: 'play none none none' }
+      });
+
+      // ── Dossier cards stagger animation ──
+      document.querySelectorAll('.dossier-card').forEach(function (card, i) {
+        gsap.set(card, { opacity: 0, x: -60 });
+        gsap.to(card, {
+          opacity: 1, x: 0, duration: 0.7, ease: 'power3.out',
+          delay: 0.08 * i,
+          scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none none' }
+        });
+      });
+
+    }); // end DOMContentLoaded
+
+    // ─── Job Details Fetch ───
+    function fetchJobDetails(jobKey) {
+      const data = JOB_PROFILES[jobKey];
+
+      // Update both sidebar and hero card details
+      ['job-details', 'job-details-sidebar'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (data) {
+          el.innerHTML = `
+            <div class="detail-block">
+              <p style="font-family:'Space Mono',monospace;font-size:0.55rem;letter-spacing:0.2em;color:var(--crimson);margin-bottom:0.6rem;text-transform:uppercase;">// Assessment Intel</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.6rem;">
+                <div>
+                  <p style="font-size:0.55rem;color:rgba(255,255,255,0.3);text-transform:uppercase;font-family:'Space Mono',monospace;">Questions</p>
+                  <p style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;">${data.questions.length}</p>
+                </div>
+                <div>
+                  <p style="font-size:0.55rem;color:rgba(255,255,255,0.3);text-transform:uppercase;font-family:'Space Mono',monospace;">Pass Score</p>
+                  <p style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--crimson);">${PASS_THRESHOLD}%</p>
+                </div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
+                ${data.skills_required.map(s => `<span class="skill-tag">${s}</span>`).join('')}
+              </div>
+            </div>`;
+        } else {
+          el.innerHTML = '';
+        }
+      });
+
+      // Enable both buttons
+      ['start-assessment-btn', 'start-assessment-btn-sidebar'].forEach(function(id) {
+        const btn = document.getElementById(id);
+        if (btn) btn.disabled = !data;
+      });
+    }
+
+    function startAssessment() {
+      let jobKey = ASSIGNED_ROLE;
+      if (!jobKey) {
+        const sel1 = document.getElementById('job-select');
+        const sel2 = document.getElementById('job-select-sidebar');
+        jobKey = (sel1 && sel1.value) || (sel2 && sel2.value) || '';
+      }
+      const errEls = ['error-message', 'error-message-sidebar'].map(id => document.getElementById(id));
+      if (jobKey && JOB_PROFILES[jobKey]) {
+        window.location.href = `/candidate/test/${encodeURIComponent(jobKey)}`;
+      } else {
+        errEls.forEach(el => {
+          if (el) { el.textContent = '⚠ Please select a valid simulation module.'; el.style.display = 'block'; }
+        });
+      }
+    }
+
+    function selectRole(jobKey) {
+      if (!IS_LOGGED_IN) {
+        document.getElementById('login-card')?.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      // Sync both selects
+      ['job-select', 'job-select-sidebar'].forEach(function(id) {
+        const sel = document.getElementById(id);
+        if (sel) sel.value = jobKey;
+      });
+      fetchJobDetails(jobKey);
+      // Scroll to sidebar on mobile, or just show details
+      if (window.innerWidth < 860) {
+        document.getElementById('sidebar')?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Init on load
+    window.addEventListener('DOMContentLoaded', function() {
+      if (IS_LOGGED_IN && ASSIGNED_ROLE) {
+        fetchJobDetails(ASSIGNED_ROLE);
+      } else if (IS_LOGGED_IN) {
+        const sel = document.getElementById('job-select') || document.getElementById('job-select-sidebar');
+        if (sel) fetchJobDetails(sel.value);
+      }
+    });
+  </script>
+
+</body>
+</html>

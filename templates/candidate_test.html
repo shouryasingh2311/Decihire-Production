@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Assessment | WorkDNA — DeciHier</title>
+  <meta name="description" content="WorkDNA Psychometric Assessment — DeciHier Decision Simulator">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            crimson: '#DC143C',
+            'crimson-dark': '#8B0000',
+          },
+          fontFamily: {
+            'display': ['Bebas Neue', 'sans-serif'],
+            'body':    ['Space Grotesk', 'sans-serif'],
+            'mono':    ['Space Mono', 'monospace'],
+          }
+        }
+      }
+    };
+
+    // Flask-injected data
+    const jobKey            = "{{ job_key | safe }}";
+    const questionsData     = {{ questions | tojson | safe }};
+    const totalTimeMinutes  = {{ time_limit_minutes | safe }};
+    const candidateName     = "{{ candidate_name | safe }}";
+
+    let currentQuestionIndex = 0;
+    let answers = {};
+    let times = {};
+    let questionStartTime = Date.now();
+    let timerInterval;
+
+    // Trait accumulators for live meters (visual only — actual scoring is server-side)
+    const traitMeters = { TA: 0, SL: 0, ER: 0, BP: 0, BS: 0 };
+  </script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    :root {
+      --crimson:      #DC143C;
+      --crimson-glow: rgba(220,20,60,0.4);
+      --white:        #FFFFFF;
+      --off-white:    #E0E0E0;
+      --gray-dim:     #444455;
+      --black:        #000000;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: var(--white);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Film grain */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 256px;
+      animation: grain 0.3s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%{transform:translate(0,0)} 10%{transform:translate(-2%,-3%)} 20%{transform:translate(3%,2%)}
+      30%{transform:translate(-1%,4%)} 40%{transform:translate(2%,-1%)} 50%{transform:translate(-3%,3%)}
+      60%{transform:translate(1%,-2%)} 70%{transform:translate(-2%,1%)} 80%{transform:translate(3%,-3%)}
+      90%{transform:translate(-1%,2%)} 100%{transform:translate(2%,0)}
+    }
+
+    /* ── TOP BAR ── */
+    #top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: rgba(0,0,0,0.85);
+      border-bottom: 1px solid rgba(220,20,60,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      z-index: 500;
+      backdrop-filter: blur(12px);
+    }
+    .brand-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.2em;
+      color: var(--white);
+    }
+    .brand-text span { color: var(--crimson); }
+
+    #timer-display {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.3rem;
+      color: var(--white);
+      transition: color 0.4s;
+    }
+    #timer-display.danger { color: var(--crimson); animation: timerPulse 0.8s ease-in-out infinite; }
+    @keyframes timerPulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    /* Progress bar below top-bar */
+    #global-progress {
+      position: fixed;
+      top: 56px; left: 0;
+      height: 2px;
+      background: var(--crimson);
+      z-index: 499;
+      transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 0 8px var(--crimson);
+    }
+
+    /* ── MAIN STAGE ── */
+    #stage {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4.5rem 1.5rem 7rem;
+    }
+
+    /* Radial glow bg */
+    #stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(220,20,60,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── SCENARIO CARD ── */
+    #scenario-card {
+      width: 100%;
+      max-width: 760px;
+      background: rgba(8, 0, 0, 0.88);
+      border: 1px solid rgba(220,20,60,0.3);
+      border-top: 3px solid var(--crimson);
+      backdrop-filter: blur(20px);
+      padding: 2.5rem 3rem;
+      position: relative;
+      box-shadow: 0 0 60px rgba(220,20,60,0.1);
+    }
+
+    .scenario-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: var(--crimson);
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .scenario-prompt {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1rem, 2.2vw, 1.3rem);
+      line-height: 1.55;
+      color: var(--white);
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+
+    /* ── OPTIONS ── */
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: 3px solid transparent;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.65rem;
+      cursor: pointer;
+      text-align: left;
+      color: rgba(255,255,255,0.7);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
+    }
+    .option-btn:hover {
+      border-left-color: var(--crimson);
+      background: rgba(220,20,60,0.06);
+      color: var(--white);
+      transform: translateX(4px);
+    }
+    .option-btn.selected {
+      border-left-color: var(--crimson);
+      border-color: rgba(220,20,60,0.5);
+      background: rgba(220,20,60,0.12);
+      color: var(--white);
+    }
+    .option-letter {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--crimson);
+      min-width: 1.2rem;
+      letter-spacing: 0.05em;
+      margin-top: 0.1rem;
+    }
+
+    /* ── NEXT BUTTON ── */
+    #next-btn {
+      margin-top: 1.5rem;
+      width: 100%;
+      background: var(--crimson);
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      padding: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: 0 0 20px rgba(220,20,60,0.35);
+    }
+    #next-btn:hover { background: #FF2D55; box-shadow: 0 0 35px rgba(220,20,60,0.6); transform: translateY(-2px); }
+    #next-btn:disabled { background: #3a0010; box-shadow: none; cursor: not-allowed; transform: none; opacity: 0.5; }
+
+    /* ── TRAIT METERS (bottom bar) ── */
+    #trait-meters {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 52px;
+      background: rgba(0,0,0,0.9);
+      border-top: 1px solid rgba(220,20,60,0.15);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 0 2rem;
+      z-index: 500;
+    }
+    .trait-meter {
+      flex: 1;
+    }
+    .trait-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .trait-bar-track {
+      background: rgba(255,255,255,0.07);
+      height: 3px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .trait-bar-fill {
+      height: 100%;
+      background: var(--crimson);
+      box-shadow: 0 0 6px var(--crimson);
+      transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+      border-radius: 2px;
+    }
+
+    /* ── ALERT ── */
+    #inline-alert {
+      display: none;
+      background: rgba(220,20,60,0.1);
+      border-left: 3px solid var(--crimson);
+      color: var(--crimson);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.6rem 0.85rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── TRANSITION (slide) ── */
+    #scenario-card { will-change: transform, opacity; }
+
+    /* ── SUBMISSION / STATUS screens ── */
+    .status-screen {
+      text-align: center;
+    }
+    .status-screen p.big {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .status-screen p.sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.1em;
+    }
+
+    /* Scanline decoration on card */
+    #scenario-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── TOP BAR ── -->
+  <div id="top-bar">
+    <div class="brand-text">DECI<span>HIER</span> <span style="font-family:'Space Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.25);letter-spacing:0.2em;">// SIMULATION ACTIVE</span></div>
+    <div id="timer-display">--:--</div>
+    <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em;">
+      SUBJECT: <span style="color:rgba(255,255,255,0.7);">{{ candidate_name }}</span>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div id="global-progress" style="width:0%;"></div>
+
+  <!-- ── MAIN STAGE ── -->
+  <div id="stage">
+    <div id="scenario-card">
+      <div id="inline-alert">⚠ SELECT AN OPTION BEFORE PROCEEDING</div>
+      <div id="question-inner">
+        <!-- JS-rendered content -->
+        <div class="status-screen">
+          <p class="big">LOADING...</p>
+          <p class="sub">INITIALISING SIMULATION</p>
+        </div>
+      </div>
+      <button id="next-btn" onclick="nextQuestion()" style="display:none;">CONFIRM DECISION →</button>
+    </div>
+  </div>
+
+  <!-- ── TRAIT METERS ── -->
+  <div id="trait-meters">
+    <div class="trait-meter">
+      <p class="trait-label">Technical Acumen</p>
+      <div class="trait-bar-track"><div class="trait-bar-fill" id="meter-TA" style="width:0%"></div></div>
+    </div>
+    <div class="trait-meter">
+      <p class="trait-label">Strategic Ldrs.</p>
+      <div class="trait-bar-track"><div class="trait-bar-fill" id="meter-SL" style="width:0%"></div></div>
+    </div>
+    <div class="trait-meter">
+      <p class="trait-label">Ethical Resp.</p>
+      <div class="trait-bar-track"><div class="trait-bar-fill" id="meter-ER" style="width:0%"></div></div>
+    </div>
+    <div class="trait-meter">
+      <p class="trait-label">Business Prof.</p>
+      <div class="trait-bar-track"><div class="trait-bar-fill" id="meter-BP" style="width:0%"></div></div>
+    </div>
+    <div class="trait-meter">
+      <p class="trait-label">Beh. Speed</p>
+      <div class="trait-bar-track"><div class="trait-bar-fill" id="meter-BS" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+    let selectedOptionIdx = null;
+
+    // ── Timer ──
+    function startTimer() {
+      let timeLeft = totalTimeMinutes * 60;
+      const display = document.getElementById('timer-display');
+
+      function tick() {
+        const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const s = (timeLeft % 60).toString().padStart(2, '0');
+        display.textContent = `${m}:${s}`;
+        if (timeLeft <= 120) display.classList.add('danger');
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          submitAll(true);
+          return;
+        }
+        timeLeft--;
+      }
+      tick();
+      timerInterval = setInterval(tick, 1000);
+    }
+
+    // ── Render Question ──
+    function showQuestion() {
+      selectedOptionIdx = null;
+      const btn = document.getElementById('next-btn');
+      hideAlert();
+
+      if (currentQuestionIndex >= questionsData.length) {
+        submitAll(false);
+        return;
+      }
+
+      const q = questionsData[currentQuestionIndex];
+      const progressPct = ((currentQuestionIndex) / questionsData.length) * 100;
+      document.getElementById('global-progress').style.width = progressPct + '%';
+
+      const inner = document.getElementById('question-inner');
+
+      const html = `
+        <p class="scenario-number">// SCENARIO ${String(currentQuestionIndex + 1).padStart(2,'0')} / ${String(questionsData.length).padStart(2,'0')} — ${jobKey}</p>
+        <p class="scenario-prompt">${q.prompt}</p>
+        <div id="options-container">
+          ${q.options.map((opt, idx) => `
+            <button class="option-btn" id="opt-${idx}" onclick="selectOption(${idx})">
+              <span class="option-letter">${LETTERS[idx]}</span>
+              <span>${opt.text}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+
+      // Animate out, swap, animate in
+      gsap.to('#scenario-card', {
+        x: -40, opacity: 0, duration: 0.3, ease: 'power2.in',
+        onComplete: () => {
+          inner.innerHTML = html;
+          btn.style.display = 'block';
+          btn.disabled = true;
+          questionStartTime = Date.now();
+          gsap.fromTo('#scenario-card',
+            { x: 60, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }
+          );
+          // Stagger option animations
+          gsap.fromTo('.option-btn',
+            { x: 30, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.35, stagger: 0.07, ease: 'power2.out', delay: 0.1 }
+          );
+        }
+      });
+    }
+
+    function selectOption(idx) {
+      selectedOptionIdx = idx;
+      document.querySelectorAll('.option-btn').forEach((b, i) => {
+        b.classList.toggle('selected', i === idx);
+      });
+      const btn = document.getElementById('next-btn');
+      btn.disabled = false;
+      hideAlert();
+    }
+
+    function nextQuestion() {
+      if (selectedOptionIdx === null) {
+        showAlert();
+        return;
+      }
+
+      const elapsed = Date.now() - questionStartTime;
+      times[currentQuestionIndex]   = elapsed;
+      answers[currentQuestionIndex] = selectedOptionIdx;
+
+      // Update trait meters (visual approximation)
+      const q = questionsData[currentQuestionIndex];
+      const scores = q.options[selectedOptionIdx].score;
+      const maxPossible = 10;
+      const total = questionsData.length;
+      for (const [key, val] of Object.entries(scores)) {
+        if (traitMeters[key] !== undefined) {
+          traitMeters[key] = Math.min(100, traitMeters[key] + (val / (total * maxPossible)) * 100);
+        }
+      }
+      updateMeters();
+
+      currentQuestionIndex++;
+      showQuestion();
+    }
+
+    function updateMeters() {
+      for (const [key, val] of Object.entries(traitMeters)) {
+        const el = document.getElementById(`meter-${key}`);
+        if (el) el.style.width = Math.min(100, val) + '%';
+      }
+    }
+
+    function showAlert() {
+      const a = document.getElementById('inline-alert');
+      a.style.display = 'block';
+      gsap.fromTo(a, { x: -8 }, { x: 8, repeat: 3, yoyo: true, duration: 0.08, ease: 'none' });
+    }
+    function hideAlert() {
+      document.getElementById('inline-alert').style.display = 'none';
+    }
+
+    // ── Submission ──
+    function submitAll(timedOut) {
+      clearInterval(timerInterval);
+      document.getElementById('global-progress').style.width = '100%';
+      document.getElementById('next-btn').style.display = 'none';
+
+      const inner = document.getElementById('question-inner');
+      inner.innerHTML = `
+        <div class="status-screen">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:4rem;color:var(--crimson);margin-bottom:0.5rem;">◈</div>
+          <p class="big" style="color:var(--white);">ANALYSING<br><span style="color:var(--crimson);">RESPONSE MATRIX</span></p>
+          <p class="sub" style="margin-top:1rem;">CALCULATING YOUR WORKDNA BLUEPRINT...<br>DO NOT CLOSE THIS WINDOW</p>
+        </div>`;
+
+      gsap.fromTo('#scenario-card', { opacity: 0 }, { opacity: 1, duration: 0.5 });
+
+      const payload = {
+        jobKey,
+        answers: Object.keys(answers).map(qi => ({
+          questionId: questionsData[qi].id,
+          selectedOptionIndex: answers[qi],
+          timeTakenMs: times[qi] || 5000
+        }))
+      };
+
+      fetch('/assess', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url;
+        } else {
+          inner.innerHTML = `<div class="status-screen"><p class="big" style="color:var(--crimson);">SUBMISSION<br>ERROR</p><p class="sub">${data.error || 'An unexpected error occurred.'}</p></div>`;
+        }
+      })
+      .catch(err => {
+        inner.innerHTML = `<div class="status-screen"><p class="big" style="color:var(--crimson);">NETWORK<br>ERROR</p><p class="sub">Could not connect to the server.<br>Check console for details.</p></div>`;
+        console.error(err);
+      });
+    }
+
+    // ── Init ──
+    window.addEventListener('DOMContentLoaded', () => {
+      if (questionsData.length > 0) {
+        // Initial card entrance
+        gsap.set('#scenario-card', { opacity: 0, y: 40, scale: 0.95 });
+        startTimer();
+        // Slight delay to let GSAP load
+        setTimeout(() => {
+          gsap.to('#scenario-card', {
+            opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out',
+            onComplete: showQuestion
+          });
+        }, 200);
+      } else {
+        document.getElementById('question-inner').innerHTML = `<div class="status-screen"><p class="big" style="color:var(--crimson);">NO SCENARIOS<br>FOUND</p><p class="sub">This profile has no assessment questions.</p></div>`;
+      }
+    });
+  </script>
+
+</body>
+</html>

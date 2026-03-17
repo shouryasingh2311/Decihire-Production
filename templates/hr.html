@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HR Portal — Create Test | DeciHier</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{crimson:'#DC143C'}}}};</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    :root { --crimson:#DC143C; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;background:#000;color:#fff;font-family:'Space Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:256px;animation:grain .3s steps(1) infinite;}
+    @keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-3%)}20%{transform:translate(3%,2%)}30%{transform:translate(-1%,4%)}40%{transform:translate(2%,-1%)}50%{transform:translate(-3%,3%)}60%{transform:translate(1%,-2%)}70%{transform:translate(-2%,1%)}80%{transform:translate(3%,-3%)}90%{transform:translate(-1%,2%)}100%{transform:translate(2%,0)}}
+    .glass{background:rgba(8,0,0,.88);border:1px solid rgba(220,20,60,.25);border-top:3px solid var(--crimson);padding:2.5rem;max-width:480px;width:100%;opacity:0;transform:translateY(30px);}
+    .eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.4em;color:var(--crimson);text-transform:uppercase;margin-bottom:.75rem;}
+    .big-title{font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:.95;margin-bottom:1.75rem;}
+    select.fi{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(220,20,60,.3);color:#fff;font-family:'Space Mono',monospace;font-size:.8rem;padding:.8rem 1rem;border-radius:2px;outline:none;margin-bottom:1rem;appearance:none;cursor:pointer;}
+    select.fi:focus{border-color:var(--crimson);}
+    select.fi option{background:#120000;}
+    .btn-crim{width:100%;background:var(--crimson);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.2em;padding:.8rem;border:none;cursor:pointer;transition:all .2s;box-shadow:0 0 20px rgba(220,20,60,.35);}
+    .btn-crim:hover{background:#FF2D55;box-shadow:0 0 35px rgba(220,20,60,.6);transform:translateY(-2px);}
+    .link-muted{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s;}
+    .link-muted:hover{color:var(--crimson);}
+  </style>
+</head>
+<body>
+  <div class="glass" id="card">
+    <p class="eyebrow">// HR OPERATOR PORTAL</p>
+    <h1 class="big-title">GENERATE<br><span style="color:var(--crimson);">TEST KEY</span></h1>
+    <form method="post" style="display:flex;flex-direction:column;gap:.75rem;">
+      <label style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:rgba(255,255,255,.35);text-transform:uppercase;">Select Simulation Module</label>
+      <select class="fi" name="role" id="role-select" required>
+        {% for r in roles %}
+        <option value="{{ r }}">{{ r }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn-crim">ISSUE TEST KEY</button>
+    </form>
+    <div style="margin-top:1.5rem;display:flex;gap:1.5rem;border-top:1px solid rgba(255,255,255,.06);padding-top:1rem;">
+      <a href="{{ url_for('hr_dashboard') }}" class="link-muted">→ View All Results</a>
+      <a href="/" class="link-muted">← Candidate Portal</a>
+    </div>
+  </div>
+  <script>
+    gsap.to('#card', { opacity:1, y:0, duration:.8, ease:'power3.out', delay:.2 });
+  </script>
+</body>
+</html>

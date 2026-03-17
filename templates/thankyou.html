@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Simulation Complete | WorkDNA — DeciHier</title>
+  <meta name="description" content="WorkDNA assessment submitted. Your psychological blueprint is being processed.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{crimson:'#DC143C'}}}};</script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    :root { --crimson: #DC143C; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Film grain */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 256px;
+      animation: grain 0.3s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%{transform:translate(0,0)} 10%{transform:translate(-2%,-3%)} 20%{transform:translate(3%,2%)}
+      30%{transform:translate(-1%,4%)} 40%{transform:translate(2%,-1%)} 50%{transform:translate(-3%,3%)}
+      60%{transform:translate(1%,-2%)} 70%{transform:translate(-2%,1%)} 80%{transform:translate(3%,-3%)}
+      90%{transform:translate(-1%,2%)} 100%{transform:translate(2%,0)}
+    }
+
+    /* Floating particles */
+    .particle {
+      position: fixed;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: var(--crimson);
+      pointer-events: none;
+      animation: float linear infinite;
+      opacity: 0;
+    }
+    @keyframes float {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      5%   { opacity: 0.7; }
+      95%  { opacity: 0.7; }
+      100% { transform: translateY(-10vh) translateX(var(--dx)); opacity: 0; }
+    }
+
+    /* Radial glow */
+    .glow-bg {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(220,20,60,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Main content card */
+    .thankyou-card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 620px;
+      padding: 3.5rem 3rem;
+      background: rgba(8, 0, 0, 0.9);
+      border: 1px solid rgba(220,20,60,0.25);
+      border-top: 3px solid var(--crimson);
+      box-shadow: 0 0 80px rgba(220,20,60,0.1);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px) scale(0.97);
+    }
+
+    .check-icon {
+      width: 64px;
+      height: 64px;
+      border: 2px solid var(--crimson);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      opacity: 0;
+      transform: scale(0.5);
+      box-shadow: 0 0 30px rgba(220,20,60,0.25);
+    }
+
+    .main-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      line-height: 0.9;
+      color: #fff;
+      letter-spacing: 0.03em;
+      opacity: 0;
+      transform: translateY(25px);
+    }
+    .main-heading span { color: var(--crimson); }
+
+    .sub-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      margin-top: 1.25rem;
+      opacity: 0;
+      line-height: 1.8;
+    }
+
+    .divider {
+      width: 80px;
+      height: 1px;
+      background: var(--crimson);
+      margin: 1.75rem auto;
+      opacity: 0;
+    }
+
+    .info-block {
+      background: rgba(220,20,60,0.04);
+      border: 1px solid rgba(220,20,60,0.15);
+      border-left: 3px solid var(--crimson);
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .return-link {
+      display: inline-block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: var(--crimson);
+      border: 1px solid rgba(220,20,60,0.5);
+      padding: 0.7rem 2rem;
+      text-decoration: none;
+      margin-top: 2rem;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    .return-link:hover {
+      background: var(--crimson);
+      color: #fff;
+      box-shadow: 0 0 25px rgba(220,20,60,0.4);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="glow-bg"></div>
+
+  <!-- Vertical crimson lines (decorative) -->
+  <div style="position:fixed;left:2.5rem;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(220,20,60,0.3),transparent);pointer-events:none;"></div>
+  <div style="position:fixed;right:2.5rem;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(220,20,60,0.3),transparent);pointer-events:none;"></div>
+
+  <div class="thankyou-card" id="main-card">
+
+    <!-- Check icon -->
+    <div class="check-icon" id="check-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DC143C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <!-- Eyebrow -->
+    <p style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.4em;color:var(--crimson);text-transform:uppercase;opacity:0;" id="eyebrow">// Simulation Terminated //</p>
+
+    <!-- Main heading -->
+    <h1 class="main-heading" id="main-heading" style="margin-top:0.75rem;">
+      ASSESSMENT<br><span>COMPLETE</span>
+    </h1>
+
+    <!-- Sub text -->
+    <p class="sub-text" id="sub-text">
+      Your WorkDNA blueprint has been captured.<br>
+      The system is processing your decision matrix.
+    </p>
+
+    <!-- Divider -->
+    <div class="divider" id="divider"></div>
+
+    <!-- Info block -->
+    <div class="info-block" id="info-block">
+      You may now close this window. Your results will be reviewed by the hiring team, and you will be contacted shortly regarding the next steps in the recruitment process. No further action is required.
+    </div>
+
+    <!-- Return link -->
+    <a href="/" class="return-link" id="return-link">← RETURN TO PORTAL</a>
+
+  </div>
+
+  <script>
+    // Floating crimson particles
+    const PARTICLE_COUNT = 30;
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = `${Math.random() * 100}vw`;
+      p.style.setProperty('--dx', `${(Math.random() - 0.5) * 80}px`);
+      p.style.animationDelay = `-${Math.random() * 8}s`;
+      p.style.animationDuration = `${6 + Math.random() * 6}s`;
+      document.body.appendChild(p);
+    }
+
+    // GSAP entrance
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.3 });
+
+    tl.to('#main-card',   { opacity: 1, y: 0, scale: 1, duration: 0.8 })
+      .to('#check-icon',  { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, '-=0.4')
+      .to('#eyebrow',     { opacity: 1, duration: 0.4 }, '-=0.1')
+      .to('#main-heading',{ opacity: 1, y: 0, duration: 0.6 }, '-=0.2')
+      .to('#sub-text',    { opacity: 1, duration: 0.5 }, '-=0.2')
+      .to('#divider',     { opacity: 1, duration: 0.4 }, '-=0.1')
+      .to('#info-block',  { opacity: 1, y: 0, duration: 0.5 }, '-=0.2')
+      .to('#return-link', { opacity: 1, y: 0, duration: 0.5 }, '-=0.2');
+  </script>
+
+</body>
+</html>
